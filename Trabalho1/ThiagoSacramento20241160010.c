@@ -25,8 +25,10 @@
 #include "ThiagoSacramento20241160010.h" // Substitua pelo seu arquivo de header renomeado
 #include <stdlib.h>
 
-DataQuebrada quebraData(char data[]);
+#pragma region CoisasDoProf
 
+DataQuebrada quebraData(char data[]);
+DataSeparada separarData(char data[]);
 /*
 ## função utilizada para testes  ##
 
@@ -76,7 +78,9 @@ int teste(int a)
 
   return val;
 }
+#pragma endregion
 
+#pragma region Q1
 /*
  Q1 = validar data
 @objetivo
@@ -92,68 +96,13 @@ int teste(int a)
  */
 int q1(char data[])
 {
-  int datavalida = 1;
-
-  // quebrar a string data em strings sDia, sMes, sAno
-  char sDia[3];
-  char sMes[3];
-  char sAno[5];
-  int dia = 0, mes = 0, ano = 0;
-  int i, j;
-  for (i = 0; i < 2 && data[i] != '/'; i++)
-    sDia[i] = data[i];
-  sDia[i++] = '\0';
-
-  for (j = 0; j < 2 && data[i] != '/'; i++, j++)
-    sMes[j] = data[i];
-  sMes[j] = '\0';
-  i++;
-
-  for (j = 0; j < 4 && data[i] != '\0'; i++, j++)
-    sAno[j] = data[i];
-  sAno[j] = '\0';
-  i++;
-  printf(" %s,", sDia);
-  printf(" %s,", sMes);
-  printf(" %s\n", sAno);
-  dia += sDia[0];
-  if(sDia[1]) {
-    dia *= 10;
-    dia += sDia[1];
-  }
-  mes += sMes[0];
-  if(sMes[1]) {
-    mes *= 10;
-    mes += sMes[1];
-  }
-  ano += sAno[0];
-  if(sAno[1]) {
-    ano *= 10;
-    ano += sAno[1];
-  }
-  // printf("%s\n", data);
-
-  if (mes == 1 || mes == 3 || mes == 5 || mes == 7 || 
-        mes == 8 || mes == 10 || mes == 12) {
-        if (dia > 31)
-            return 0;
-    } else if (mes == 4 || mes == 6 || mes == 9 || mes == 11) {
-        if (dia > 30)
-            return 0;
-    } else if (ano % 4 == 0 && ano % 100 != 0) {
-        if (dia > 29)
-            return 0;
-    } else 
-        if (dia > 28)
-            return 0;
-    return 1;
-
-  if (datavalida)
-    return 1;
-  else
-    return 0;
+  DataSeparada sData = separarData(data);
+  return sData.valido;
 }
 
+#pragma endregion
+
+#pragma region Q2
 /*
  Q2 = diferença entre duas datas
  @objetivo
@@ -172,47 +121,104 @@ DiasMesesAnos q2(char datainicial[], char datafinal[])
 {
 
   // calcule os dados e armazene nas três variáveis a seguir
+  DataSeparada datas1 = separarData(datainicial);
+  DataSeparada datas2 = separarData(datafinal);
   DiasMesesAnos dma;
+
+  dma.qtdDias = 0;
+  dma.qtdMeses = 0;
+  dma.qtdAnos = 0;
+  dma.retorno = 1;
 
   if (q1(datainicial) == 0)
   {
+    printf("data inicial invalida!\n");
     dma.retorno = 2;
     return dma;
   }
   else if (q1(datafinal) == 0)
   {
+    printf("data final invalida!\n");
     dma.retorno = 3;
     return dma;
   }
   else
   {
     // verifique se a data final não é menor que a data inicial
-
+    if (datas1.ano > datas2.ano) {
+      dma.retorno = 4;
+      return dma;
+    }
+    else if (datas1.ano == datas2.ano && datas1.mes > datas2.mes) {
+      dma.retorno = 4;
+      return dma;
+    }
+    else if (datas1.ano == datas2.ano && datas1.mes == datas2.mes && datas1.dia > datas2.dia) {
+      dma.retorno = 4;
+      return dma;
+    }
+    // Visto que a data é valida:
+    DiasMesesAnos dmaCont;
+    dmaCont.qtdDias = datas1.dia;
+    dmaCont.qtdMeses = datas1.mes;
+    dmaCont.qtdAnos = datas1.ano;
     // calcule a distancia entre as datas
-
+    while (dmaCont.qtdAnos != datas2.ano || dmaCont.qtdMeses != datas2.mes || dmaCont.qtdDias != datas2.dia)
+    {
+      //printf("%d %d %d\n", dmaCont.qtdDias, dmaCont.qtdMeses, dmaCont.qtdAnos);
+      incrementarDia(&dma, &dmaCont);
+    }
     // se tudo der certo
     dma.retorno = 1;
+    printf("dias: %d\n", dma.qtdDias);
+    printf("Meses: %d\n", dma.qtdMeses);
+    printf("Anos: %d\n", dma.qtdAnos);
     return dma;
   }
 }
+#pragma endregion
 
+#pragma region Q3
 /*
  Q3 = encontrar caracter em texto
  @objetivo
     Pesquisar quantas vezes um determinado caracter ocorre em um texto
  @entrada
     uma string texto, um caracter c e um inteiro que informa se é uma pesquisa Case Sensitive ou não. Se isCaseSensitive = 1, a pesquisa deve considerar diferenças entre maiúsculos e minúsculos.
-        Se isCaseSensitive != 1, a pesquisa não deve  considerar diferenças entre maiúsculos e minúsculos.
+    Se isCaseSensitive != 1, a pesquisa não deve  considerar diferenças entre maiúsculos e minúsculos.
  @saida
     Um número n >= 0.
  */
-int q3(char *texto, char c, int isCaseSensitive)
+int q3(char *text, char c, int isCaseSensitive)
 {
-  int qtdOcorrencias = -1;
+	char texto[250];
+	int i;
+	for (i = 0; text[i]; i++)
+		texto[i] = text[i];
+	texto[i] = '\0';
+  int qtdOcorrencias = 0; //começou = -1, não sei pq
 
+  if (isCaseSensitive != 1) {
+    for (int i = 0; texto[i]; i++)
+      if(texto[i] <= 'z' && texto[i] >= 'a')
+        texto[i] -= 32; 
+		//
+    if(c <= 'z' && c >= 'a')
+      c -= 32;
+  }
+  
+	//printf("\n%c ", c);
+	
+  for (int i = 0; texto[i]; i++) {
+    if (texto[i] == c)
+      qtdOcorrencias++;
+  }
+	//printf("qtd: %d\n", qtdOcorrencias);
   return qtdOcorrencias;
 }
+#pragma endregion
 
+#pragma region Q4
 /*
  Q4 = encontrar palavra em texto
  @objetivo
@@ -230,11 +236,51 @@ int q3(char *texto, char c, int isCaseSensitive)
  */
 int q4(char *strTexto, char *strBusca, int posicoes[30])
 {
-  int qtdOcorrencias = -1;
+  int qtdOcorrencias = 0; //pq ele deixa -1?
+  int index = 0;
+  int inicio, final;
+  int achou = 1;
+
+  for (int i = 0; strTexto[i]; i++)
+      if(strTexto[i] <= 'z' && strTexto[i] >= 'a')
+        strTexto[i] -= 32;
+
+  for (int i = 0; strBusca[i]; i++)
+      if(strBusca[i] <= 'z' && strBusca[i] >= 'a')
+        strBusca[i] -= 32;
+  //
+
+  for(int i = 0; strTexto[i]; i++) {
+    int j, k;
+    int achou = 1;
+
+    if (strTexto[i] == strBusca[0]) {
+			inicio = i + 1;
+      for(j = i, k = 0; strBusca[k]; j++, k++) {
+        if (strBusca[k] != strTexto[j]) {
+          achou = 0;
+          break;
+        }
+      }
+      if (achou) {
+        
+				final = j;
+				i = final - 1;
+        //printf("\ninicio: %d\n", inicio);
+        //printf("final: %d\n\n", final);
+        posicoes[index++] = inicio;
+        posicoes[index++] = final;
+        qtdOcorrencias++;
+      }
+    }
+
+  }
 
   return qtdOcorrencias;
 }
+#pragma endregion
 
+#pragma region Q5
 /*
  Q5 = inverte número
  @objetivo
@@ -247,10 +293,41 @@ int q4(char *strTexto, char *strBusca, int posicoes[30])
 
 int q5(int num)
 {
+  int newNum = 0;
+  int digitos;
+  int pot;
+  int twopot;
 
+  //ver qnts digitos temos em num
+  newNum = num;
+  for (digitos = 1; newNum > 9; digitos++) 
+    newNum /= 10;
+  //
+
+  //
+  newNum = 0;
+  for (int i = 0; digitos > 0; digitos--, i++) {
+    int aux;
+    pot = 1;
+    twopot = 1;
+    for (aux = digitos - 1; aux > 0; aux--) {
+      pot *= 10;
+    }
+    for (int j = 0; j < i; j++) {
+      twopot *= 10;
+    }
+    newNum += ((num / pot) % 10) * twopot;
+    // printf("num: %d\n", num);
+    // printf("inverso: %d\n\n", newNum);
+  }
+  //
+
+  num = newNum;
   return num;
 }
+#pragma endregion
 
+#pragma region Q6
 /*
  Q6 = ocorrência de um número em outro
  @objetivo
@@ -264,9 +341,146 @@ int q5(int num)
 int q6(int numerobase, int numerobusca)
 {
   int qtdOcorrencias;
+	char numBase[100];
+	char numBusca[100];
+
+	intToString(numBase, numerobase);
+	intToString(numBusca, numerobusca);
+
+	qtdOcorrencias = BuscarString(numBase, numBusca);
+
+
   return qtdOcorrencias;
 }
 
+#pragma endregion
+
+#pragma region SeparadordeData
+DataSeparada separarData(char data[]) 
+{
+  DataSeparada DS;
+  DS.valido = 1;
+  DS.dia = 0;
+  DS.mes = 0;
+  DS.ano = 0;
+  // quebrar a string data em strings sDia, sMes, sAno
+  char sDia[3];
+  char sMes[3];
+  char sAno[5];
+  int i, j;
+  for (i = 0; i < 2 && data[i] != '/'; i++)
+    sDia[i] = data[i];
+  sDia[i++] = '\0';
+
+  for (j = 0; j < 2 && data[i] != '/'; i++, j++)
+    sMes[j] = data[i];
+  sMes[j] = '\0';
+  i++;
+
+  for (j = 0; j < 4 && data[i] != '\0'; i++, j++)
+    sAno[j] = data[i];
+  sAno[j] = '\0';
+  i++;
+
+  //printf("..%s, ", sDia);
+  //printf("%s, ", sMes);
+  //printf("%s\n", sAno);
+
+  // dia = stringToInt(sDia);
+  // mes = stringToInt(sMes);
+  // ano = stringToInt(sAno);
+
+  for (int i = 0; sDia[i]; i++) {
+    DS.dia *= 10;
+    DS.dia += sDia[i] - 48;
+  }
+
+  for (int i = 0; sMes[i]; i++) {
+    DS.mes *= 10;
+    DS.mes += sMes[i] - 48;
+  }
+
+  for (int i = 0; sAno[i]; i++) {
+    DS.ano *= 10;
+    DS.ano += sAno[i] - 48;
+  }
+  int ano = DS.ano, mes = DS.mes, dia = DS.dia;
+  //printf("%d %d %d\n", dia, mes, ano);
+  if (mes < 13 && mes > 0 && dia > 0) {
+    if (mes == 1 || mes == 3 || mes == 5 || mes == 7 || 
+        mes == 8 || mes == 10 || mes == 12) {
+        if (dia > 31)
+            DS.valido = 0;
+    } else if (mes == 4 || mes == 6 || mes == 9 || mes == 11) {
+        if (dia > 30)
+            DS.valido = 0;
+    } else if (ano % 4 == 0 && ano % 100 != 0 || ano % 400 == 0 && ano % 4 == 0) {
+        if (dia > 29) {
+            DS.valido = 0;
+        }
+    } else if (dia > 28)
+      DS.valido = 0;
+  } else
+    DS.valido = 0;
+  return DS;
+}
+
+void incrementarDia(DiasMesesAnos *dmaCont, DiasMesesAnos *dma) {
+  int dia = dma->qtdDias;
+  int mes = dma->qtdMeses;
+  int ano = dma->qtdAnos;
+  if (mes == 1 || mes == 3 || mes == 5 || mes == 7 || mes == 8 || mes == 10 || mes == 12) {
+    if (dia == 31) {
+      dma->qtdDias = 1;
+      dmaCont->qtdDias = 0;
+      incrementarMeses(dma, dmaCont);
+    } else 
+      dma->qtdDias++;
+      dmaCont->qtdDias++;
+  } else if (mes == 4 || mes == 6 || mes == 9 || mes == 11) {
+    if (dia == 30) {
+      dma->qtdDias = 1;
+      dmaCont->qtdDias = 0;
+      incrementarMeses(dma, dmaCont);
+    } else 
+      dma->qtdDias++;
+      dmaCont->qtdDias++;
+  } else if (ano % 4 == 0 && ano % 100 != 0 || ano % 400 == 0 && ano % 4 == 0) {
+    if (dia == 29) {
+      dma->qtdDias = 1;
+      dmaCont->qtdDias = 0;
+      incrementarMeses(dma, dmaCont);
+    } else 
+      dma->qtdDias++;
+      dmaCont->qtdDias++;
+  } else if (dia == 28) {
+    dma->qtdDias = 1;
+    dmaCont->qtdDias = 0;
+    incrementarMeses(dma, dmaCont);
+  } else
+    dma->qtdDias++;
+    dmaCont->qtdDias++;
+}
+
+void incrementarMeses(DiasMesesAnos *dma, DiasMesesAnos *dmaCont) {
+  int mes = dma->qtdMeses;
+  if (mes == 12) {
+    dma->qtdMeses = 1;
+    dmaCont->qtdMeses = 0;
+    incrementarAnos(dma, dmaCont);
+  } else 
+    dma->qtdMeses++;
+    dmaCont->qtdMeses++;
+}
+
+void incrementarAnos(DiasMesesAnos *dma, DiasMesesAnos *dmaCont) {
+  dma->qtdAnos++;
+  dmaCont->qtdAnos++;
+}
+
+#pragma endregion
+
+#pragma region Prof
 DataQuebrada quebraData(char data[])
 {
   DataQuebrada dq;
@@ -334,4 +548,53 @@ DataQuebrada quebraData(char data[])
   dq.valido = 1;
 
   return dq;
+}
+#pragma endregion
+
+void intToString(char string[], int num) {
+
+	int newNum;
+	//printf("%d\n", num);
+
+	int i;
+	for (i = 0; num > 0; i++) {
+		string[i] = (num % 10) + 48;
+		num /= 10;
+	}
+	string[i] = '\0';
+	
+	char aux[100];
+	int j;
+	for (j = 0; string[j]; j++)
+		aux[j] = string[j];
+	aux[j] = '\0';
+
+	for (j = j - 1, i = 0; j >= 0; j--, i++)
+		string[i] = aux[j];
+	string[i] = '\0';
+	//printf("%s\n", string);
+
+}
+
+int BuscarString(char stringBase[], char strBusca[]) {
+	int qtdOcorrencias = 0;
+	for(int i = 0; stringBase[i]; i++) {
+    int j, k;
+    int achou = 1;
+    if (stringBase[i] == strBusca[0]) {
+      for(j = i, k = 0; strBusca[k]; j++, k++) {
+        if (strBusca[k] != stringBase[j]) {
+          achou = 0;
+          break;
+        }
+      }
+      if (achou) {
+        qtdOcorrencias++;
+				i = j - 1;
+      }
+    }
+	}
+
+	return qtdOcorrencias;
+
 }

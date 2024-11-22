@@ -41,6 +41,14 @@ typedef struct Qtd
 
 } DiasMesesAnos;
 
+typedef struct dataS
+{
+    int dia;
+    int mes;
+    int ano;
+    int valido;
+} DataSeparada;
+
 int somar(int x, int y); //função utilizada para testes
 int fatorial(int x); //função utilizada para testes
 int q1(char data[]);
@@ -50,5 +58,13 @@ int q4(char *strTexto, char *strBusca, int posicoes[30]);
 int q5(int num);
 int q6(int numerobase, int numerobusca);
 DataQuebrada quebraData(char data[]);
+void incrementarDia(DiasMesesAnos *dma, DiasMesesAnos *dmaCont);
+void incrementarMeses(DiasMesesAnos *dma, DiasMesesAnos *dmaCont);
+void incrementarAnos(DiasMesesAnos *dma, DiasMesesAnos *dmaCont);
+int stringToInt(char string[]);
+void intToString(char string[], int num);
+int BuscarString(char stringBase[], char strBusca[]);
+
+
 
 #endif  // TRABALHO1_PRIMEIROULTIMONOMEMATRICULA_H
