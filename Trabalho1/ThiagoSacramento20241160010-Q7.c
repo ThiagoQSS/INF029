@@ -17,11 +17,12 @@ int main ()
     printf("Pressione Qualquer tecla para iniciar\n");
 
     for (int i = 0; i < 9; i++) {
-        getchar();
+        //getchar();
         system("cls||clear");
         mostrarTabuleiro(jogo);
         printf("Jogador %d informe sua jogada(A1): ", i % 2 + 1);
         scanf("%c%d", &cpos1, &pos2);
+        getchar();
         pos1 = cpos1 - 64;
         if (jogo[pos1 - 1][pos2 - 1] == ' ') {
             jogo[pos1 - 1][pos2 - 1] = i % 2 ? 'O' : 'X';
@@ -41,6 +42,7 @@ int main ()
         printf("O vencedor eh o jogador %d", check);
     else
         printf("A sem hora ganhou o jogo");
+    
 }
 
 #pragma region funções

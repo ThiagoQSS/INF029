@@ -175,6 +175,7 @@ DiasMesesAnos q2(char datainicial[], char datafinal[])
     printf("Anos: %d\n", dma.qtdAnos);
     return dma;
   }
+  
 }
 #pragma endregion
 
@@ -240,10 +241,14 @@ int q4(char *strTexto, char *strBusca, int posicoes[30])
   int index = 0;
   int inicio, final;
   int achou = 1;
+  int qntAcentos = 0;
 
-  for (int i = 0; strTexto[i]; i++)
+  for (int i = 0; strTexto[i]; i++){
       if(strTexto[i] <= 'z' && strTexto[i] >= 'a')
         strTexto[i] -= 32;
+      else if (strTexto[i] < 0)
+        qntAcentos++;
+  }
 
   for (int i = 0; strBusca[i]; i++)
       if(strBusca[i] <= 'z' && strBusca[i] >= 'a')
