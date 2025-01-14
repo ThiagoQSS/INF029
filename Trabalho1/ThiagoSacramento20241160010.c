@@ -11,10 +11,10 @@
 //  O aluno deve preencher seus dados abaixo, e implementar as questões do trabalho
 
 //  ----- Dados do Aluno -----
-//  Nome:
-//  email:
-//  Matrícula:
-//  Semestre:
+//  Nome: Thiago Quadros Silva do Sacramento
+//  email: thiagonormale@gmail.com
+//  Matrícula: 20241160010
+//  Semestre: 2
 
 //  Copyright © 2016 Renato Novais. All rights reserved.
 // Última atualização: 07/05/2021 - 19/08/2016
@@ -132,13 +132,13 @@ DiasMesesAnos q2(char datainicial[], char datafinal[])
 
   if (q1(datainicial) == 0)
   {
-    printf("data inicial invalida!\n");
+    // printf("data inicial invalida!\n");
     dma.retorno = 2;
     return dma;
   }
   else if (q1(datafinal) == 0)
   {
-    printf("data final invalida!\n");
+    // printf("data final invalida!\n");
     dma.retorno = 3;
     return dma;
   }
@@ -170,9 +170,9 @@ DiasMesesAnos q2(char datainicial[], char datafinal[])
     }
     // se tudo der certo
     dma.retorno = 1;
-    printf("dias: %d\n", dma.qtdDias);
-    printf("Meses: %d\n", dma.qtdMeses);
-    printf("Anos: %d\n", dma.qtdAnos);
+    // printf("dias: %d\n", dma.qtdDias);
+    // printf("Meses: %d\n", dma.qtdMeses);
+    // printf("Anos: %d\n", dma.qtdAnos);
     return dma;
   }
   
