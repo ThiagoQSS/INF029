@@ -27,9 +27,7 @@ int main()
     testeListar();
     testeRetornarTodosNumeros();
     testeMudarTamanhoEstrutura();
-    /*
     testeListaEncadeada();
-    */
     finalizar();
 }
 int ligado = 1;

@@ -13,6 +13,12 @@ typedef struct {
 Base vetorPrincipal[TAM];
 
 
+typedef struct no {
+    int conteudo;
+    struct no *prox;
+} No;
+
+
 /*
 Objetivo: criar estrutura auxiliar na posição 'posicao'.
 com tamanho 'tamanho'
@@ -336,8 +342,45 @@ Retorno (No*)
 */
 No *montarListaEncadeadaComCabecote()
 {
+    
+    int num;
+    No * lista;
+    No * aux;
 
-    return NULL;
+    for (int i; i < 10; i++) 
+    {
+        if(vetorPrincipal[i].vetorSecundario)
+        {
+            int j = 0;
+            while (j < vetorPrincipal[i].topo) 
+            {
+                num = vetorPrincipal[i].vetorSecundario[j];
+                No * novo = malloc(sizeof(No));
+                if(novo) {
+                    novo->conteudo = num;
+                    novo->prox = NULL;
+
+                    if (lista == NULL)
+                        lista = novo;
+                    else 
+                    {
+                        aux = lista;
+                        while (aux->prox)
+                            aux = aux->prox;
+                        //
+                        aux->prox = novo;
+                    }
+                } 
+                else    
+                    printf("Erro ao alocar memoria!!!");
+                //
+                j++;
+                return lista;
+            }
+        }
+    }
+
+    
 }
 
 /*
@@ -357,6 +400,7 @@ Retorno
 */
 void destruirListaEncadeadaComCabecote(No **inicio)
 {
+    *inicio = NULL;
 }
 
 /*
@@ -386,7 +430,7 @@ void finalizar()
     }
 }
 
-void bubbleSort(int vetor[], int size) 
+void bubbleSort(int * vetor, int size) 
 {
     int i = 1;
     int aux;
@@ -408,3 +452,28 @@ void bubbleSort(int vetor[], int size)
         }
     }
 }
+
+void inserirNoFim(No **lista, int num) 
+{
+    No * aux;
+    No * novo = malloc(sizeof(No));
+
+    if(novo) {
+        novo->conteudo = num;
+        novo->prox = NULL;
+
+        if (*lista == NULL)
+            *lista = novo;
+        else 
+        {
+            aux = *lista;
+            while (aux->prox)
+                aux = aux->prox;
+            //
+            aux->prox = novo;
+        }
+    } 
+    else    
+        printf("Erro ao alocar memoria!!!");
+    
+} 
