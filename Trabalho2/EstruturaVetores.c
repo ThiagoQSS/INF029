@@ -13,12 +13,6 @@ typedef struct {
 Base vetorPrincipal[TAM];
 
 
-typedef struct no {
-    int conteudo;
-    struct no *prox;
-} No;
-
-
 /*
 Objetivo: criar estrutura auxiliar na posição 'posicao'.
 com tamanho 'tamanho'
