@@ -383,6 +383,13 @@ Retorno void
 */
 void getDadosListaEncadeadaComCabecote(No *inicio, int vetorAux[])
 {
+    No * aux = inicio;
+    int i = 0;
+    while(aux->prox != NULL) {
+        vetorAux[i] = aux->conteudo;
+        aux = aux->prox;
+        i++;
+    }
 }
 
 /*
